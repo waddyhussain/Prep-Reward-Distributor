@@ -27,7 +27,7 @@ balance = icon_service.get_balance(wallet.get_address())
 print("balance: ", balance)
 
 #4 Enter prep address here
-PREP_ADDRESS = "hx437e3ce53016ffc71be609a4d1194e41a5d89678"
+PREP_ADDRESS = "hx437...678"
 
 #5 Enter ICX amount for distribution
 # distributor Wallet must have the distribution amount in ICX
