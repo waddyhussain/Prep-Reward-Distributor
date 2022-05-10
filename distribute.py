@@ -38,7 +38,7 @@ if network == LISBON_TEST_NETWORK_ID:
     # this is dummy list for testing change addresses
     voter_list=[{"address": "hxcb3204...8db2a7f1", "amount": 100},{"address":"hx24598bf...66f57990c", "amount": 50},{"address": "hx02dd...1d1", "amount": 25},{"address": "hxd2495...c1ef", "amount": 25}]
 elif network == MAIN_NETWORK_ID:
-    voter_list= getVoterList(PREP_ADDRESS)
+    voter_list= resource.getVoterList(PREP_ADDRESS)
 
 # calculate voter share
 voter_share_list = resource.getVoterShare(voter_list, ICX_DISTRIBUTION_AMOUNT)
