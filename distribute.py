@@ -37,23 +37,44 @@ if CLAIM_ISCORE:
 balance = icon_service.get_balance(wallet.get_address())
 print("balance: ", balance)
 
-#5 Enter ICX amount for distribution
+#6 Enter ICX amount for distribution amongst voters (0 to not distribute to voters)
 # distributor Wallet must have the distribution amount in ICX
-ICX_DISTRIBUTION_AMOUNT = 100
+ICX_DISTRIBUTION_AMOUNT_VOTERS = 100
 
-# scrap voter list
-if network == LISBON_TEST_NETWORK_ID:
-    # this is dummy list for testing change addresses
-    voter_list=[{"address": "hxcb3204...8db2a7f1", "amount": 100},{"address":"hx24598bf...66f57990c", "amount": 50},{"address": "hx02dd...1d1", "amount": 25},{"address": "hxd2495...c1ef", "amount": 25}]
-elif network == MAIN_NETWORK_ID:
-    voter_list= resource.getVoterList(PREP_ADDRESS)
+if ICX_DISTRIBUTION_AMOUNT_VOTERS:
+    # scrap voter list
+    if network == LISBON_TEST_NETWORK_ID:
+        # this is dummy list for testing change addresses
+        voter_list=[{"address": "hxcb3204...8db2a7f1", "amount": 100},{"address":"hx24598bf...66f57990c", "amount": 50},{"address": "hx02dd...1d1", "amount": 25},{"address": "hxd2495...c1ef", "amount": 25}]
+    elif network == MAIN_NETWORK_ID:
+        voter_list= resource.getVoterList(PREP_ADDRESS)
 
-# calculate voter share
-voter_share_list = resource.getVoterShare(voter_list, ICX_DISTRIBUTION_AMOUNT)
+    # calculate voter share
+    voter_share_list = resource.getShare(voter_list, ICX_DISTRIBUTION_AMOUNT_VOTERS)
 
-# distribute the rewards
-distribution_result = resource.distribute(voter_share_list, wallet, SHOWTXRESULT, icon_service, network)
+    # distribute the rewards
+    distribution_result = resource.distribute(voter_share_list, wallet, SHOWTXRESULT, icon_service, network)
 
-# export voter list with results voters.csv
-resource.exportVotersList(distribution_result)
+    # export voter list with results voters.csv
+    resource.exportList(distribution_result, "voters.csv")
 
+#6 Enter ICX amount for distribution amongst bonders (0 to not distribute to bonders)
+# distributor Wallet must have the distribution amount in ICX
+ICX_DISTRIBUTION_AMOUNT_BONDERS = 0
+
+if ICX_DISTRIBUTION_AMOUNT_BONDERS:
+    # scrap bonder list
+    if network == LISBON_TEST_NETWORK_ID:
+        # this is dummy list for testing change addresses
+        bonder_list=[{"address": "hxcb3204...8db2a7f1", "amount": 100},{"address":"hx24598bf...66f57990c", "amount": 50},{"address": "hx02dd...1d1", "amount": 25},{"address": "hxd2495...c1ef", "amount": 25}]
+    elif network == MAIN_NETWORK_ID:
+        bonder_list= resource.getBonderList(PREP_ADDRESS)
+
+    # calculate bonder share
+    bonder_share_list = resource.getShare(bonder_list, ICX_DISTRIBUTION_AMOUNT_BONDERS)
+
+    # distribute the rewards
+    distribution_result = resource.distribute(bonder_share_list, wallet, SHOWTXRESULT, icon_service, network)
+
+    # export voter list with results voters.csv
+    resource.exportList(distribution_result, "bonders.csv")

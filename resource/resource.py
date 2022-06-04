@@ -35,30 +35,60 @@ def getVoterList(PREP_ADDRESS):
             voterList.append(voterDict)
     return voterList
 
-# save voters list to csv
-def exportVotersList(voterList):
+# save list to csv
+def exportList(shareList, filename):
     # remove old file if exist
-    if os.path.exists("voters.csv"):
-        os.remove("voters.csv")
-    df = pd.DataFrame(voterList)
+    if os.path.exists(filename):
+        os.remove(filename)
+    df = pd.DataFrame(shareList)
     # saving the dataframe
-    df.to_csv('voters.csv')
+    df.to_csv(filename)
 
-# calculate total votes and voter share
-def getVoterShare(voterList, ICX_DISTRIBUTION_AMOUNT):
-    totalVotes = 0
+# get bonderlist
+def getBonderList(icon_service, wallet, PREP_ADDRESS):
+    bonder_list = []
+    call = CallBuilder().from_(wallet.get_address())\
+        .to("cx0000000000000000000000000000000000000000")\
+        .method("getBonderList")\
+        .params({"address": PREP_ADDRESS})\
+        .build()
+
+    bonders = icon_service.call(call)
+
+    for address in bonders["bonderList"]:
+        call = CallBuilder().from_(wallet.get_address())\
+            .to("cx0000000000000000000000000000000000000000")\
+            .method("getBond")\
+            .params({"address": address})\
+            .build()
+
+        bond = list(filter(lambda x: x["address"] == str(PREP_ADDRESS), icon_service.call(call)["bonds"]))
+        try:
+            bond_dict = {"address": address, "amount": int(bond[0]["value"], 0)}
+        except IndexError:
+            bond_dict = {"address": address, "amount": 0}
+
+        bonder_list.append(bond_dict)
+
+    return bonder_list
+
+
+# calculate share of given list (voters or bonders)
+def getShare(addressList, ICX_DISTRIBUTION_AMOUNT):
+    totalAmount = 0
     reward = 0
-    voterShareList = []
-    for voter in voterList:
-        totalVotes += voter["amount"]
-    print("totalvotes(ICX) = ",totalVotes)
+    shareList = []
+    for entry in addressList:
+        totalAmount += entry["amount"]
+    print("total(ICX) = ",totalAmount)
 
-    for voter in voterList:
-        voterShare = voter["amount"]/totalVotes
-        reward = voterShare * ICX_DISTRIBUTION_AMOUNT
-        voter.update({"share": voterShare, "reward": reward })
-        voterShareList.append(voter)
-    return voterShareList
+    for entry in addressList:
+        share = entry["amount"]/totalAmount
+        reward = share * ICX_DISTRIBUTION_AMOUNT
+        entry.update({"share": share, "reward": reward })
+        shareList.append(entry)
+
+    return shareList
 
 # Send icx to recipient address.
 def sendTx(recipientAddress, value, wallet, icon_service, network):
@@ -85,12 +115,11 @@ def sendTx(recipientAddress, value, wallet, icon_service, network):
     return tx_hash
 
 # Send icx to recipient address.
-def distribute(voter_share_list, wallet, SHOWTXRESULT, icon_service, network):
+def distribute(share_list, wallet, SHOWTXRESULT, icon_service, network):
     distributionResult = []
-    for voter in voter_share_list:
-        tx_hash = sendTx(voter["address"],voter["reward"], wallet, icon_service, network)
+    for entry in share_list:
+        tx_hash = sendTx(entry["address"],entry["reward"], wallet, icon_service, network)
         tx_res = 0
-
 
         if SHOWTXRESULT:
             # Waiting 5 seconds for tracker to register transaction
@@ -100,8 +129,8 @@ def distribute(voter_share_list, wallet, SHOWTXRESULT, icon_service, network):
             print("tx_result [status : 1 on success, 0 on failure]", tx_result["status"])
             tx_res = tx_result["status"]
 
-        voter.update({"hash": tx_hash, "tx_result": tx_res})
-        distributionResult.append(voter)
+        entry.update({"hash": tx_hash, "tx_result": tx_res})
+        distributionResult.append(entry)
     return distributionResult
 
 def claimIScore(wallet, icon_service, network):
