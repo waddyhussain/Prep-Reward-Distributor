@@ -23,11 +23,19 @@ elif network == MAIN_NETWORK_ID:
 # Loads a Distributor Wallet from a keystore file
 wallet = KeyWallet.load("./keystoreFileName", "Password")
 print("Distributor address: ", wallet.get_address()) # Returns an address
-balance = icon_service.get_balance(wallet.get_address())
-print("balance: ", balance)
 
 #4 Enter prep address here
 PREP_ADDRESS = "hx437...678"
+
+# 5 Select if you want to claim I-Score for PRep
+# [True or False]
+CLAIM_ISCORE = False
+if CLAIM_ISCORE:
+    resource.claimIScore(wallet, icon_service, network)
+
+# Get balance
+balance = icon_service.get_balance(wallet.get_address())
+print("balance: ", balance)
 
 #5 Enter ICX amount for distribution
 # distributor Wallet must have the distribution amount in ICX

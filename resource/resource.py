@@ -104,3 +104,16 @@ def distribute(voter_share_list, wallet, SHOWTXRESULT, icon_service, network):
         distributionResult.append(voter)
     return distributionResult
 
+def claimIScore(wallet, icon_service, network):
+    transaction = CallTransactionBuilder()\
+        .from_(wallet.get_address())\
+        .to("cx0000000000000000000000000000000000000000")\
+        .step_limit(1000000)\
+        .nid(network)\
+        .nonce(100)\
+        .method("claimIScore")\
+        .build()
+
+    signed_transaction = SignedTransaction(transaction, wallet)
+    tx_hash = icon_service.send_transaction_and_wait(signed_transaction)
+    return tx_hash
