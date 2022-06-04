@@ -23,8 +23,7 @@ def getVoterList(PREP_ADDRESS):
     voterList = []
     url = f'https://main.tracker.solidwallet.io/v3/iiss/delegate/list?page=1&count=10&prep={PREP_ADDRESS}'
     res = requests.get(url).json()
-    if res["totalSize"] % 100 != 0:
-        page_count = int(1 + (res["totalSize"] / 100))
+    page_count = res["totalSize"] // 100 + (res["totalSize"] % 100 != 0)
     print("pagecount = ",page_count)
     print("total voters = ", res["totalSize"])
 
@@ -63,7 +62,7 @@ def getVoterShare(voterList, ICX_DISTRIBUTION_AMOUNT):
 
 # Send icx to recipient address.
 def sendTx(recipientAddress, value, wallet, icon_service, network):
-    amount = int(value) * EXA
+    amount = int(value * EXA)
     # Generates an instance of transaction for sending icx.
     # change nid to testnet/mainnet
     transaction = TransactionBuilder()\
