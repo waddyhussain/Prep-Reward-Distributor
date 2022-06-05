@@ -68,7 +68,7 @@ if ICX_DISTRIBUTION_AMOUNT_BONDERS:
         # this is dummy list for testing change addresses
         bonder_list=[{"address": "hxcb3204...8db2a7f1", "amount": 100},{"address":"hx24598bf...66f57990c", "amount": 50},{"address": "hx02dd...1d1", "amount": 25},{"address": "hxd2495...c1ef", "amount": 25}]
     elif network == MAIN_NETWORK_ID:
-        bonder_list= resource.getBonderList(PREP_ADDRESS)
+        bonder_list= resource.getBonderList(icon_service, wallet, PREP_ADDRESS)
 
     # calculate bonder share
     bonder_share_list = resource.getShare(bonder_list, ICX_DISTRIBUTION_AMOUNT_BONDERS)
