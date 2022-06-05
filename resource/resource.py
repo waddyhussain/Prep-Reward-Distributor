@@ -144,5 +144,7 @@ def claimIScore(wallet, icon_service, network):
         .build()
 
     signed_transaction = SignedTransaction(transaction, wallet)
-    tx_hash = icon_service.send_transaction_and_wait(signed_transaction)
+    tx_hash = icon_service.send_transaction(signed_transaction)
+    # Sleep after transaction so has time to register
+    time.sleep(5)
     return tx_hash

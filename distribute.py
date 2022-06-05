@@ -58,7 +58,7 @@ if ICX_DISTRIBUTION_AMOUNT_VOTERS:
     # export voter list with results voters.csv
     resource.exportList(distribution_result, "voters.csv")
 
-#6 Enter ICX amount for distribution amongst bonders (0 to not distribute to bonders)
+#7 Enter ICX amount for distribution amongst bonders (0 to not distribute to bonders)
 # distributor Wallet must have the distribution amount in ICX
 ICX_DISTRIBUTION_AMOUNT_BONDERS = 0
 
