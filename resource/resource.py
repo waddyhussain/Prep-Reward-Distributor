@@ -68,7 +68,8 @@ def getBonderList(icon_service, wallet, PREP_ADDRESS):
         except IndexError:
             bond_dict = {"address": address, "amount": 0}
 
-        bonder_list.append(bond_dict)
+        if bond_dict["amount"] > 0:
+            bonder_list.append(bond_dict)
 
     return bonder_list
 
