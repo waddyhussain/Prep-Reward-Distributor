@@ -100,7 +100,7 @@ def sendTx(recipientAddress, value, wallet, icon_service, network):
         .from_(wallet.get_address())\
         .to(recipientAddress)\
         .value(amount)\
-        .step_limit(500000000)\
+        .step_limit(1000000)\
         .nid(network)\
         .nonce(100)\
         .build()
