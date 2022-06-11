@@ -1,16 +1,19 @@
 # Prep-Reward-Distributor
-This scripts scrape the voters of a prep from tracker and calculates the percentage of their votes to distribute rewards as per their share.
+This scripts gets the voters and bonders of a prep and calculates the percentage of their votes/bonds to distribute 
+rewards as per their share.
 
 Twitter: [@bearsurvivor](https://twitter.com/BearSurvivor)
 
 ## How to Run Script
 **Create virtual environment**
 
-`virtualenv env`
+`python3 -m venv venv`
 
-**activatre virtual environment**
+**Activate virtual environment**
 
-`env\Scripts\activate`
+Windows: `venv\Scripts\activate`\
+Linux: `source venv/bin/activate`
+
 
 **Install Dependencies**
 
@@ -18,34 +21,33 @@ Twitter: [@bearsurvivor](https://twitter.com/BearSurvivor)
 
 **Run distribution script**
 
-`distribute.py`
+`python3 distribute.py`
 
 ## Parameters 
 
-In distribute.py update the following parameters
+In `config.py` update the following parameters
 
-**Showing Tx result in Voters.csv**
+- `SHOWTXRESULT` = `False` or `True`
 
-[status : 1 on true, 0 on false]
 
-`SHOWTXRESULT = 0`
+- `NETWORK` = `LISBON_TEST_NETWORK_ID` or `MAIN_NETWORK_ID`
 
-**Selecting network**
 
-`network = LISBON_TEST_NETWORK_ID`
+- `KEYSTORE_PATH` = Path to keystore file (relative paths will be evaluated from execution directory)
 
-or
 
-`network = MAIN_NETWORK_ID`
+- `PASSWORD` = Password for keystore file
 
-**Adding wallet**
 
-`wallet = KeyWallet.load("./keystoreFileName", "Password")`
+- `PREP_ADDRESS` = Prep address, e.g `"hx43...678"`
 
-**Adding prep address**
 
-`PREP_ADDRESS = "hx43...678"`
+Then set the distribution amounts in `distribute.py`
 
-**Adding distribution amount**
+- `VOTERS_DISTRIBUTION_AMOUNT` - amount in ICX to be distributed between voters
 
-`ICX_DISTRIBUTION_AMOUNT = 100`
+
+- `BONDERS_DISTRIBUTION_AMOUNT` - amount in ICX to be distributed between bonders
+
+If you want to distribute an amount proportional to the distributor wallet's balance, you can use the `balance` 
+variable (e.g to distribute 50% of the balance to voters you would do `VOTERS_DISTRIBUTION_AMOUNT = balance * 0.5`)
