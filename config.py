@@ -19,3 +19,7 @@ PREP_ADDRESS = "hx437...678"
 # Select if you want to claim I-Score before distribution
 # [Expected: True or False]
 CLAIM_ISCORE = False
+
+# Select if you want to include stakers on OMM
+# [Expected: True or False]
+INCLUDE_OMM_STAKERS = False

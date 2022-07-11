@@ -7,11 +7,13 @@ from iconsdk.builder.transaction_builder import (
 )
 from iconsdk.signed_transaction import SignedTransaction
 from iconsdk.wallet.wallet import KeyWallet
-
 import requests
 import pandas as pd
 import os
 import time
+
+import prep_omm_icx_delegations
+from config import INCLUDE_OMM_STAKERS
 
 MAIN_NETWORK_ID = 1
 LISBON_TEST_NETWORK_ID = 2
@@ -24,8 +26,8 @@ def getVoterList(PREP_ADDRESS):
     url = f'https://main.tracker.solidwallet.io/v3/iiss/delegate/list?page=1&count=10&prep={PREP_ADDRESS}'
     res = requests.get(url).json()
     page_count = res["totalSize"] // 100 + (res["totalSize"] % 100 != 0)
-    print("pagecount = ",page_count)
-    print("total voters = ", res["totalSize"])
+    # print("pagecount = ",page_count)
+    # print("total voters = ", res["totalSize"])
 
     for page in range(1, page_count + 1, 1):
         url = f'https://main.tracker.solidwallet.io/v3/iiss/delegate/list?page={page}&count=100&prep={PREP_ADDRESS}'
@@ -33,6 +35,13 @@ def getVoterList(PREP_ADDRESS):
         for voter in data["data"]:
             voterDict = {"address": voter["address"], "amount": voter["amount"]}
             voterList.append(voterDict)
+
+    if INCLUDE_OMM_STAKERS:
+        omm_delegation_info = prep_omm_icx_delegations.get_prep_delegation_info(PREP_ADDRESS)
+        for address, amount in omm_delegation_info.items():
+            voterDict = {"address": address, "amount": amount / EXA}
+            voterList.append(voterDict)
+
     return voterList
 
 # save list to csv

@@ -27,10 +27,10 @@ Linux: `source venv/bin/activate`
 
 In `config.py` update the following parameters
 
-- `SHOWTXRESULT` = `False` or `True`
-
-
 - `NETWORK` = `LISBON_TEST_NETWORK_ID` or `MAIN_NETWORK_ID`
+
+
+- `SHOWTXRESULT` = `True` or `False`
 
 
 - `KEYSTORE_PATH` = Path to keystore file (relative paths will be evaluated from execution directory)
@@ -40,6 +40,12 @@ In `config.py` update the following parameters
 
 
 - `PREP_ADDRESS` = Prep address, e.g `"hx43...678"`
+
+
+- `CLAIM_ISCORE` = `True` or `False`
+
+
+- `INCLUDE_OMM_STAKERS` = `True` or `False`
 
 
 Then set the distribution amounts in `distribute.py`
