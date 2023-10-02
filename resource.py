@@ -21,25 +21,18 @@ EXA = 10**18
 
 # parse voterlist from tracker
 def getVoterList(PREP_ADDRESS):
-    page_count = 0
     voterList = []
-    url = f'https://main.tracker.solidwallet.io/v3/iiss/delegate/list?page=1&count=10&prep={PREP_ADDRESS}'
+    url = f'https://tracker.icon.community/api/v1/governance/votes/{PREP_ADDRESS}'
     res = requests.get(url).json()
-    page_count = res["totalSize"] // 100 + (res["totalSize"] % 100 != 0)
-    # print("pagecount = ",page_count)
-    # print("total voters = ", res["totalSize"])
 
-    for page in range(1, page_count + 1, 1):
-        url = f'https://main.tracker.solidwallet.io/v3/iiss/delegate/list?page={page}&count=100&prep={PREP_ADDRESS}'
-        data = requests.get(url).json()
-        for voter in data["data"]:
-            voterDict = {"address": voter["address"], "amount": voter["amount"]}
-            voterList.append(voterDict)
+    for voter in res:
+        voterDict = {"address": voter["address"], "amount": voter["value"]}
+        voterList.append(voterDict)
 
     if INCLUDE_OMM_STAKERS:
         omm_delegation_info = prep_omm_icx_delegations.get_prep_delegation_info(PREP_ADDRESS)
         for address, amount in omm_delegation_info.items():
-            voterDict = {"address": address, "amount": amount / EXA}
+            voterDict = {"address": address, "amount": amount}
             voterList.append(voterDict)
 
     return voterList
