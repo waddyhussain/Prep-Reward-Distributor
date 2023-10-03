@@ -27,7 +27,7 @@ print(f"Balance: {balance} ICX")
 VOTERS_DISTRIBUTION_AMOUNT = 50
 
 if VOTERS_DISTRIBUTION_AMOUNT:
-    # Scrap voter list
+    # Scrape voter list
     if NETWORK == LISBON_TEST_NETWORK_ID:
         # This is dummy list for testing change addresses
         voter_list=[{"address": "hxcb3204...8db2a7f1", "amount": 100},{"address":"hx24598bf...66f57990c", "amount": 50},{"address": "hx02dd...1d1", "amount": 25},{"address": "hxd2495...c1ef", "amount": 25}]

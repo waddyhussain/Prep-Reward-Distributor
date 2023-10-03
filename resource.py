@@ -26,6 +26,9 @@ def getVoterList(PREP_ADDRESS):
     res = requests.get(url).json()
 
     for voter in res:
+        # Skip contract addresses
+        if voter["address"][:2] == "cx":
+            continue
         voterDict = {"address": voter["address"], "amount": voter["value"]}
         voterList.append(voterDict)
 
@@ -58,6 +61,9 @@ def getBonderList(icon_service, wallet, PREP_ADDRESS):
     bonders = icon_service.call(call)
 
     for address in bonders["bonderList"]:
+        # Skip contract addresses
+        if address[:2] == "cx":
+            continue
         call = CallBuilder().from_(wallet.get_address())\
             .to("cx0000000000000000000000000000000000000000")\
             .method("getBond")\
